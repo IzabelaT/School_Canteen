@@ -1,5 +1,10 @@
 #include "StudentQueue.h"
 
+void StudentQueue::Student::DisplayStudents()
+{
+	std::cout << "[" << name << "] " << waiting_time << "m" << std::endl;
+}
+
 void StudentQueue::Free()
 {
 	Student* iter = front;
@@ -67,31 +72,18 @@ void StudentQueue::Push(Student* New_Student)
 	}
 }
 
-StudentQueue::Student* StudentQueue::Pop()
+void StudentQueue::Pop()
 {
-	if (IsEmpty())
 	{
-		throw std::runtime_error("The Queue is Empty!");
-	}
-	else if (front == rear)
-	{
-		Student* element = front;
-		delete front;
+		if (IsEmpty())
+			return;
 
-		front = nullptr;
-		rear = nullptr;
+		Student* temp = front;
+		front = front->next;
+		if (front == NULL)
+			rear = NULL;
 
-		return element;
-	}
-	else
-	{
-		Student* element = front;
-		Student* temp = front->next;
-
-		delete front;
-
-		front = temp;
-		return element;
+		delete (temp);
 	}
 }
 
@@ -113,14 +105,14 @@ void StudentQueue::AddInQueue(std::ifstream& file)
 
 	while (!file.eof())
 	{
-		
+
 		std::getline(file, name, ' ');
 		std::getline(file, number);
 		count_Pop++;
 		unsigned int groupNumber = std::stoi(number);
 		Student* new_Student = new Student(name, groupNumber);
 
-		if (SearchForFriend(name, groupNumber)==true)
+		if (SearchForFriend(name, groupNumber) == true)
 		{
 			InsertStudent(front, name, groupNumber);
 		}
@@ -131,11 +123,19 @@ void StudentQueue::AddInQueue(std::ifstream& file)
 		CanteenTimer();
 		if (count_Pop % 2 == 0)
 		{
+			front->DisplayStudents();
 			Pop();
-			count_Pop = 0;
 		}
-		DisplayStudents(new_Student);
-
+	}
+	while (front != nullptr)
+	{
+		count_Pop++;
+		CanteenTimer();
+		if (count_Pop % 2 == 0)
+		{
+			front->DisplayStudents();
+			Pop();
+		}
 	}
 }
 
@@ -185,17 +185,6 @@ void StudentQueue::InsertStudent(Student* front, std::string Student_Name, unsig
 	temp->next = newStudent;
 }
 
-void StudentQueue::DisplayStudents(Student* Student)
-{
-	Student = front;
-	std::cout << "-------------   Next!   -------------\n";
-	while (Student != NULL)
-	{
-		std::cout << "[" << Student->name << "] " << Student->waiting_time << "m" << std::endl;
-		Student = Student->next;
-	}
-}
-
 void StudentQueue::OpenFile(std::ifstream& File, std::string FileName)
 {
 	File.open(FileName);
@@ -209,3 +198,4 @@ void StudentQueue::OpenFile(std::ifstream& File, std::string FileName)
 		exit(-1);
 	}
 }
+

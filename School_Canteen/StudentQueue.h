@@ -29,6 +29,7 @@ class StudentQueue
 		{
 			this->waiting_time = WaitingTime;
 		}
+	void DisplayStudents();
 
 	};
 	Student* front;
@@ -45,13 +46,12 @@ public:
 	~StudentQueue();
 
 	void Push(Student* New_Student);
-	Student* Pop();
+	void Pop();
 	void Peek();
 	void AddInQueue(std::ifstream& file);
 	void CanteenTimer();
 	bool SearchForFriend(std::string Student_Name, unsigned int Student_Group_Number);
 	void InsertStudent(Student* front, std::string Student_Name, unsigned int Student_Group_Number);
-	void DisplayStudents(Student* Student);
 	void OpenFile(std::ifstream& File, std::string FileName);
 
 };
